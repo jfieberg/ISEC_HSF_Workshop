@@ -59,7 +59,7 @@ dat$Breaks_Dis <- scale(dat$Breaks_Dis)
 # Getting to know the data better:
 str(dat)
 # Note that str_ID is the stratum ID. In each stratum there is exactly one realized (Loc=1) and 9 available locations (Loc=0):
-dat[1:20,]
+dat[1:30,]
 
 
 
@@ -82,7 +82,7 @@ r.clogit <- clogit(Loc ~ STAU1 + REST1 + Sohlenbrei + Breaks_Dis
 
 summary(r.clogit)$coef
 
-# However, clogit() cannot handle random effects, that is, it is not possible to e.g. include animal-specific effecs on habitat type or river width. This is where the "Poisson trick" from Muff et al. (2020) is coming into play.  
+# However, clogit() cannot handle random effects, that is, it is not possible to e.g. include animal-specific effetcs on habitat type or river width. This is where the "Poisson trick" from Muff et al. (2020) is coming into play.  
 
 
 ##########################
@@ -91,16 +91,18 @@ summary(r.clogit)$coef
 
 ## 2B.1) Bayesian approach: INLA
 
-# We have to set mean and precision for the priors of slope coefficients
+# We have to set mean and precision for the priors of slope (beta) coefficients.
+# We choose a N(0,10^4) prior:
 mean.beta <- 0
-prec.beta <- 1e-4  
+prec.beta <- 1e-4  # precision = 1/variance
 
 # The model formula for INLA, where we set the stratum-specific intercept variance to $10^6$ (or rather: the precision to $10^{-6}$), is given as follows (NOTE: We remove the intercept with -1!)
 formula.fixed <-  Loc ~ -1 +  STAU1 + REST1 + Sohlenbrei +  Breaks_Dis +
   f(str_ID,model="iid",hyper=list(
     theta=list(
-      initial=log(1e-6), # The prior is parameterized log(precision) = log(1/variance)
-      fixed=T # Fix the initial value to be a "point prior"
+      initial=log(1e-6), # The prior is parametrized log(precision) = log(1/variance)
+      fixed=T # Fix the initial value to be a "point prior"; 
+      # if fixed=F, the variance would be estimated
       )
     )
   ) 
@@ -122,7 +124,7 @@ r.inla.fixed$summary.fixed
 plot(r.inla.fixed$marginals.fixed$Sohlenbrei,type="l",xlim=c(-1,0.7),lwd=2)
 lines(r.inla.fixed$marginals.fixed$STAU1,col=2,lwd=2)
 lines(r.inla.fixed$marginals.fixed$REST1,col=3,lwd=2)
-legend("topleft",legend=c("River width", "Hab: Dam (STAU)", "Hab: residual (REST)"),col=1:3,lwd=2)
+legend("topleft",legend=c("River width", "Hab. Dam (STAU)", "Hab. Residual (REST)"),col=1:3,lwd=2)
 
 #######################################################################
 
@@ -144,7 +146,7 @@ TMBStruc.fix$mapArg = list(theta=factor(c(NA)))
 glmm.TMB.fixed = glmmTMB:::fitTMB(TMBStruc.fix) 
 
 
-# Alternatively, there is a one-step way to carry out the regression with newer versions of glmmTMB:
+# Alternatively (maybe easier), there is a one-step way to carry out the regression with newer versions of glmmTMB:
 glmm.TMB.fixed = glmmTMB(Loc ~ -1 + STAU1 + REST1 + Sohlenbrei +
                            Breaks_Dis +  (1|str_ID), 
                          family=poisson, data=dat, 
@@ -191,7 +193,7 @@ formula.random <- Loc ~  -1 + STAU1 + REST1 + Sohlenbrei +
   f(ANIMAL_ID3,REST1, model="iid",
     hyper=list(theta=list(initial=log(1),fixed=F,prior="pc.prec",param=c(3,0.05)))) 
 
-# Fitting the model the model
+# Fitting the model in inla
 tic()
 r.inla.random <- inla(formula.random, family ="Poisson", data=dat, 
                       control.fixed = list(
@@ -221,21 +223,25 @@ inla_mmarginal(r.inla.random)
 plot(r.inla.random$marginals.fixed$Sohlenbrei,type="l",xlim=c(-1,0.7),lwd=2)
 lines(r.inla.random$marginals.fixed$STAU1,col=2,lwd=2)
 lines(r.inla.random$marginals.fixed$REST1,col=3,lwd=2)
-legend("topleft",legend=c("River width", "Hab: Dam (STAU)", "Hab: residual (REST)"),col=1:3,lwd=2)
+legend("topleft",legend=c("River width", "Hab. Dam (STAU)", "Hab. Residual (REST)"),col=1:3,lwd=2)
 
-# It can be interesting to compare the posterior distributions from the fixed and random effects model:
+
+# Interesting to compare the posterior distributions from the fixed and random effects model:
 
 par(mfrow=c(1,3))
-plot(r.inla.fixed$marginals.fixed$Sohlenbrei,type="l",xlim=c(-1,0.7),lwd=2)
+plot(r.inla.fixed$marginals.fixed$Sohlenbrei,type="l",xlim=c(-1,0.7),lwd=2,main="River width")
 lines(r.inla.random$marginals.fixed$Sohlenbrei,type="l",lwd=2,lty=2)
 legend("topleft",legend=c("Fixed", "Random"),lwd=2,lty=1:2,cex=1.2)
 
-plot(r.inla.fixed$marginals.fixed$STAU1,type="l",xlim=c(-1,0.7),lwd=2,col=2)
+plot(r.inla.fixed$marginals.fixed$STAU1,type="l",xlim=c(-1,0.7),lwd=2,col=2,main="Habitat Dam (STAU)")
 lines(r.inla.random$marginals.fixed$STAU1,type="l",lwd=2,lty=2,col=2)
 
-plot(r.inla.fixed$marginals.fixed$REST1,type="l",xlim=c(-1,0.7),lwd=2,col=3)
+plot(r.inla.fixed$marginals.fixed$REST1,type="l",xlim=c(-1,0.7),lwd=2,col=3,main = "Habitat Residual (REST)")
 lines(r.inla.random$marginals.fixed$REST1,type="l",lwd=2,lty=2,col=3)
 
+# The above plots confirm that 
+# - fixed-effects models underestimate uncertainty.
+# - the actual point estimates are biased.
 
 ##########################
 ### 3B) Random effects SSFs using glmmTMB
@@ -275,12 +281,7 @@ confint(glmm.TMB.random)
 
 
 
-# Note: It it has been a problem in a previous version of glmmTMB that the confint() function only showed a table of the length equal to the number of parameters estimated. As the variance for str_ID was not estimated but fixed to 10^6, but was still listed, the last variance component (here the one for (0 + Sohlenbrei | ANIMAL_ID)) was not shown. If you face this problem, you can solve the issue by moving the component (1|str_ID) to the last position in the formula of the above code, and then use 
-TMBStruc$parameters$theta[4] = log(1e3) 
-TMBStruc$mapArg = list(theta=factor(c(1:3, NA)))
-
-
-# Again, note that there is a one-step way to carry out the regression with newer versions of glmmTMB:
+# Again, there is a one-step way to carry out the regression with newer versions of glmmTMB:
 
 glmm.TMB.random = glmmTMB(Loc ~ -1 + STAU1 + REST1 + Sohlenbrei +  
                             Breaks_Dis +  (1|str_ID) + 
@@ -292,4 +293,12 @@ glmm.TMB.random = glmmTMB(Loc ~ -1 + STAU1 + REST1 + Sohlenbrei +
                           start=list(theta=c(log(1e3),0,0,0))
 )
  
+######################################################
+# A note for those using an older version of glmmTMB
+######################################################
 
+
+# It it has been a problem in a previous version of glmmTMB that the confint() function only showed a table of the length equal to the number of parameters estimated. As the variance for str_ID was not estimated but fixed to 10^6, but was still listed, the last variance component (here the one for (0 + Sohlenbrei | ANIMAL_ID)) was not shown. If you face this problem, you can solve the issue by moving the component (1|str_ID) to the last position in the formula of the above code, and then use 
+
+#TMBStruc$parameters$theta[4] = log(1e3) 
+#TMBStruc$mapArg = list(theta=factor(c(1:3, NA)))
