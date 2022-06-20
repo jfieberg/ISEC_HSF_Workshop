@@ -1,5 +1,5 @@
-# ISEC_HSF_Workshop
-This repository contains data, code, and presentations associated with the ISEC workshop:   Advances in quantifying space-use and habitat-selection of animals.
+# ISEC HSF Workshop
+This repository contains data, code, and presentations associated with the ISEC workshop: Advances in quantifying space-use and habitat-selection of animals.
 
 **Presenters**: John Fieberg, University of Minnesota, USA; Johannes Signer, University of Göttingen, Germany; Brian Smith, Utah State University, USA, Stefanie Muff, Norwegian University of Science and Technology, Norway.
  
@@ -15,3 +15,24 @@ We will include a mix of lectures and hands on applications (model fitting in R)
 3. Methods for modeling data from multiple individuals (lecture, coded examples)
 4. Simulating movements from fitted integrated step-selection functions (lecture, coded example).
 5. Validating step-selection functions (lecture, coded example).
+
+## Software
+
+### R and RStudio
+
+Please make sure you have [installed `R` version >4.2.0](https://cran.r-project.org/). We also recommend the latest version of [RStudio Desktop](https://www.rstudio.com/products/rstudio/download/). 
+
+To build packages from source, you will need additional build tools; see details [here for Windows](https://cran.r-project.org/bin/windows/Rtools/) or [here for macOS](https://mac.r-project.org/tools/). 
+
+*Note* that if you are upgrading to R 4.2 from a previous version on Windows, you will need RTools 4.2 as well. Your previous RTools installation will not be sufficient.
+
+### R Packages
+*The script* `packages.R` *in this repository can help you install and/or update the packages required for this workshop.*
+
+We will be highlighting the use of the `amt` package for fitting habitat selection functions (HSFs) and integrated step selection functions (iSSFs). You need to install the latest version from GitHub (which will require the additional build tools we referenced above). Assuming you have installed the R package `remotes`, you can install `amt` from GitHub like this:
+
+```
+remotes::install_github("jmsigner/amt", dependencies = TRUE)
+```
+
+We will be using several other packages during the workshop. You can install (or update) all of them by running the code in `packages.R`. We strongly recommend that you upgrade to the most up-to-date versions of all these packages.
