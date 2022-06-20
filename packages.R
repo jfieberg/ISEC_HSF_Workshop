@@ -5,6 +5,7 @@ if (!requireNamespace("remotes", quietly = TRUE)){
 
 # Install 'amt' from GitHub
 remotes::install_github("jmsigner/amt", dependencies = TRUE)
+# Note: you may want to include 'build_vignettes = TRUE' above
 
 # Install R-INLA
 # https://www.r-inla.org/download-install
