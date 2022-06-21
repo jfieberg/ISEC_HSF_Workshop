@@ -29,6 +29,7 @@ packs <- c("raster",
            "TwoStepCLogit",
            "glmmTMB",
            "tictoc",
+           "conflicted",
            "broom")
 
 install.packages(packs, dependencies = TRUE)
