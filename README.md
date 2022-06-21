@@ -8,13 +8,24 @@ We will illustrate strategies for fitting habitat-selection models (resource-sel
 1. Integrated Step-Selection Functions (iSSFs), a simple framework for simultaneous modeling animal movement and habitat selection processes using conditional logistic regression (Avgar et al. 2016, Fieberg et al. 2021). These models allow one to relax the assumption that movement characteristics (i.e. step lengths and turn angles) are independent of habitat features.
 2. The amt (animal movement tools) package in R, which provides tools for exploratory analysis of animal location data, functions for data development prior to fitting RSFs or SSFs, and a simple tidyverse workflow for seamless fitting of RSF and SSF models to data from individual animals (Signer et al. in 2019).
 3. Methods for efficient estimation of mixed-effect RSFs and SSFs using INLA and the glmmTMB package (Muff et al. 2020).
- 
-We will include a mix of lectures and hands on applications (model fitting in R). A preliminary schedule and list of topics are given below:
-1. Short introduction to Resource-Selection Functions and their connection to an Inhomogeneous Poisson Process (lecture).
-2. Introduction to Step-Selection and Integrated Step-Selection Functions (lecture, coded example).
-3. Methods for modeling data from multiple individuals (lecture, coded examples)
-4. Simulating movements from fitted integrated step-selection functions (lecture, coded example).
-5. Validating step-selection functions (lecture, coded example).
+
+## Schedule
+
+We will include a mix of lectures and hands on applications (model fitting in R). A preliminary schedule with list of topics is provided below:
+
+9:00-9:10 Introductory remarks, housekeeping (schedule, materials, etc)    
+9:10-9:45 Introduction to resource-selection functions, species distribution models (John)  
+9:45-10:15 Step-selection functions and integrated step-selection functions (John)   
+10:15-10:45 Break/Q&A   
+10:45-11:45 Introduction to the amt package, coding resource and step-selection functions (Brian)    
+11:45-1:15 Lunch Break   
+1:15-2:00 Modeling among-animal variability using 2-step methods and mixed-effects models (John)   
+2:00-3:00 INLA and coded mixed effect examples (Steffi and Johannes)   
+3:00-3:15 Break/Q&A   
+3:15-3:45 Simulating from fitted SSFs (Johannes)   
+3:45-4:15 Validating SSFs using uhc plots (John)   
+4:15-5:00 Validating SSFs using amt (Brian)
+
 
 ## Software
 
