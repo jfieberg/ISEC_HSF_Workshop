@@ -213,8 +213,8 @@ r.inla.random$summary.hyperpar
  
 
 # Source R functions for calculating posterior means and medians of the precisions.
-source("inla_emarginal.R")
-source("inla_mmarginal.R")
+source("https://raw.githubusercontent.com/jfieberg/ISEC_HSF_Workshop/main/CodedExamples/inla_mmarginal.R")
+source("https://raw.githubusercontent.com/jfieberg/ISEC_HSF_Workshop/main/CodedExamples/inla_emarginal.R")
 inla_emarginal(r.inla.random)
 inla_mmarginal(r.inla.random)
 

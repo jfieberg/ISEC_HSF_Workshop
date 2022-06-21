@@ -32,8 +32,6 @@ dat <-  read.csv("https://raw.githubusercontent.com/jfieberg/ISEC_HSF_Workshop/m
 
 # Some data manipulation:
 
-# Add numerical variable for animals:
-
 # Scale and center the two continuous variables river width (Sohlenbrei) and step length (Breaks_Dis)
 dat$Sohlenbrei <- scale(dat$Sohlenbrei)
 dat$Breaks_Dis <- scale(dat$Breaks_Dis)
