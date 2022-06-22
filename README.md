@@ -47,3 +47,8 @@ remotes::install_github("jmsigner/amt", dependencies = TRUE)
 ```
 
 We will be using several other packages during the workshop. You can install (or update) all of them by running the code in `packages.R`. We strongly recommend that you upgrade to the most up-to-date versions of all these packages.
+
+
+## Communication
+
+We have created a slack channel for the workshop where you can post questions or communicate with other participants. You can join the slack channel using [this link](https://join.slack.com/t/isec2022works-e1k8729/shared_invite/zt-1bf9lo8rl-YUmdRKxMbiJqDrmxI_BAgA).
