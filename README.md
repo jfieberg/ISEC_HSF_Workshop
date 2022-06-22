@@ -51,4 +51,4 @@ We will be using several other packages during the workshop. You can install (or
 
 ## Communication
 
-We have created a slack channel for the workshop where you can post questions or communicate with other participants. You can join the slack channel using [this link](https://join.slack.com/t/isec2022works-e1k8729/shared_invite/zt-1bf9lo8rl-YUmdRKxMbiJqDrmxI_BAgA).
+We have created a Slack Workspace for the workshop where you can post questions or communicate with other participants. You can join the Workspace using [this link](https://join.slack.com/t/isec2022works-e1k8729/shared_invite/zt-1bf9lo8rl-YUmdRKxMbiJqDrmxI_BAgA).
