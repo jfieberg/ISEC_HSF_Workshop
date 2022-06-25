@@ -100,7 +100,7 @@ prec.beta <- 1e-4  # precision = 1/variance
 formula.fixed <-  Loc ~ -1 +  STAU1 + REST1 + Sohlenbrei +  Breaks_Dis +
   f(str_ID,model="iid",hyper=list(
     theta=list(
-      initial=log(1e-6), # The prior is parametrized log(precision) = log(1/variance)
+      initial=log(1e-6), # The prior is parameterized log(precision) = log(1/variance)
       fixed=T # Fix the initial value to be a "point prior"; 
       # if fixed=F, the variance would be estimated
       )
@@ -144,6 +144,7 @@ TMBStruc.fix$mapArg = list(theta=factor(c(NA)))
 
 # Then fit the model and look at the results:
 glmm.TMB.fixed = glmmTMB:::fitTMB(TMBStruc.fix) 
+summary(glmm.TMB.fixed)
 
 
 # Alternatively (maybe easier), there is a one-step way to carry out the regression with newer versions of glmmTMB:
