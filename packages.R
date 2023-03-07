@@ -3,8 +3,8 @@ if (!requireNamespace("remotes", quietly = TRUE)){
   install.packages("remotes")
 }
 
-# Install 'amt' from GitHub
-remotes::install_github("jmsigner/amt", dependencies = TRUE)
+# Install 'amt' from CRAN
+install.packages("amt", dependencies = TRUE)
 # Note: you may want to include 'build_vignettes = TRUE' above
 
 # Install R-INLA
