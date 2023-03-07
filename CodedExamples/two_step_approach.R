@@ -55,6 +55,7 @@ str(dat)
 #' 1. Using a for loop.
 #' 2. Using list columns.
 
+
 #' For loops are more intuitive, but can become a bit tedious, especially when
 #' more than two grouping factors should be considered.
 
@@ -63,12 +64,23 @@ str(dat)
 #' separately the same model (`Loc ~ STAU1 + REST1 + Sohlenbrei +  Breaks_Dis +
 #' strata(str_ID)`) and then extract coefficients. 
 
+# For loops are more intuitive, but can become a bit tedious, especially when
+# more than two grouping factors should be considered.
+
+
+# The basic idea, however, is always the same. We want to fit for each animal
+# separatly the same model (`Loc ~ STAU1 + REST1 + Sohlenbrei +  Breaks_Dis +
+# strata(str_ID)`) and then extract coefficients. 
+
+
 #' ### Using a `for`-loop ----
 
 #' We first want to know the name of all animals that are in the data set.
 unique(dat$NA_ANIMAL)
 
-#' Lets fit the model to one animal (e.g., Alena)
+ 
+# Lets fit the model to one animal (e.g., Alena)
+head(dat)
 m1 <- clogit(Loc ~ STAU1 + REST1 + Sohlenbrei +  Breaks_Dis + strata(str_ID), 
        data = dat[dat$NA_ANIMAL == "Alena", ])
 
@@ -96,9 +108,11 @@ coefs0 <- bind_rows(res, .id = "name")
 #' We will explore later, how to do summarize these results. But first, we will
 #' explore the use of list columns to do the same.
 
-#' ### Using list columns ----
+#' ### Using list columns 
 
 dat.n <- dat %>% nest(data = -c(NA_ANIMAL))
+dat.n$NA_ANIMAL[4]
+dat.n$data[[4]]
 
 #' We could add as many grouping variables as we want to `-c(NA_ANIMAL)` to make
 #' the model more complex.
@@ -113,9 +127,16 @@ dat.n <- dat.n %>%
                 clogit(Loc ~ STAU1 + REST1 + Sohlenbrei +  Breaks_Dis + strata(str_ID), 
                        data = .x) %>% tidy()))
 
+dat.n <- dat.n %>% 
+  mutate(
+    ssf = lapply(data, function(.x) 
+                clogit(Loc ~ STAU1 + REST1 + Sohlenbrei +  Breaks_Dis + strata(str_ID), 
+                       data = .x) %>% tidy()))
+dat.n
 coefs1 <- dat.n %>% select(NA_ANIMAL, ssf) %>% unnest(cols = ssf)
 
-#' Ensure the two approaches lead to the same result (which they do). 
+ 
+# Ensure the two approaches lead to the same result (which they do). 
 plot(coefs0$estimate, coefs1$estimate)
               
 #' ##  Working with the results 
